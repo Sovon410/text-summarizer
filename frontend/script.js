@@ -11,9 +11,12 @@ const characterCount = document.getElementById("character-count");
 
 const LOCAL_API_URL = "http://127.0.0.1:8000/summarize/";
 const PRODUCTION_API_URL = "/api/summarize";
-const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? LOCAL_API_URL
-    : PRODUCTION_API_URL;
+
+const API_URL =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+        ? LOCAL_API_URL
+        : PRODUCTION_API_URL;
 
 function setLoading(isLoading) {
     submitButton.disabled = isLoading;
@@ -45,13 +48,15 @@ function clearError() {
 }
 
 function updateCharacterCount() {
-    characterCount.textContent = `${textInput.value.length.toLocaleString()} / 20,000`;
+    characterCount.textContent =
+        `${textInput.value.length.toLocaleString()} / 20,000`;
 }
 
 form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const dialogue = textInput.value.trim();
+
     if (!dialogue) {
         clearSummary();
         showError("Please enter some text to summarize.");
@@ -66,11 +71,14 @@ form.addEventListener("submit", async (event) => {
     try {
         const response = await fetch(API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify({ dialogue })
         });
 
         let data = null;
+
         try {
             data = await response.json();
         } catch {
@@ -78,19 +86,28 @@ form.addEventListener("submit", async (event) => {
         }
 
         if (!response.ok) {
-            const detail = data?.detail || `Server error (${response.status}).`;
+            const detail =
+                data?.detail || `Server error (${response.status}).`;
+
             throw new Error(detail);
         }
 
         const summary = data?.summary?.trim();
+
         if (!summary) {
             throw new Error("The server returned an empty summary.");
         }
 
         showSummary(summary);
+
     } catch (error) {
         console.error("Summarization request failed:", error);
-        showError(error instanceof Error ? error.message : "Unable to summarize the text.");
+
+        showError(
+            error instanceof Error
+                ? error.message
+                : "Unable to summarize the text."
+        );
     } finally {
         setLoading(false);
     }
@@ -110,3 +127,4 @@ textInput.addEventListener("input", () => {
 });
 
 updateCharacterCount();
+
