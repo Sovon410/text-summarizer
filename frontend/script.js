@@ -10,7 +10,9 @@ const errorMessage = document.getElementById("error-message");
 const characterCount = document.getElementById("character-count");
 
 const LOCAL_API_URL = "http://127.0.0.1:8000/summarize/";
-const PRODUCTION_API_URL = "/api/summarize";
+
+const PRODUCTION_API_URL =
+    "https://text-summarizer-api-gq03.onrender.com/summarize/";
 
 const API_URL =
     window.location.hostname === "localhost" ||

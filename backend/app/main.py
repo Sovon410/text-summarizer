@@ -1,5 +1,4 @@
 import os
-from functools import lru_cache
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,9 +13,19 @@ app = FastAPI(
     version="2.0.0",
 )
 
+
+# --------------------------------------------------
+# CORS Configuration
+# --------------------------------------------------
+
 allowed_origins = [
     origin.strip()
-    for origin in os.getenv("ALLOWED_ORIGINS", "*").split(",")
+    for origin in os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://127.0.0.1:5500,"
+        "http://localhost:5500,"
+        "https://text-summarizer-t5-small.netlify.app",
+    ).split(",")
     if origin.strip()
 ]
 
@@ -29,29 +38,55 @@ app.add_middleware(
 )
 
 
+# --------------------------------------------------
+# Request Model
+# --------------------------------------------------
+
 class DialogueInput(BaseModel):
-    dialogue: str = Field(..., min_length=1, max_length=20_000)
+    dialogue: str = Field(
+        ...,
+        min_length=1,
+        max_length=20_000,
+    )
 
     @field_validator("dialogue")
     @classmethod
     def validate_dialogue(cls, value: str) -> str:
         value = value.strip()
+
         if not value:
             raise ValueError("Dialogue cannot be empty.")
+
         return value
 
 
+# --------------------------------------------------
+# Health Check
+# --------------------------------------------------
+
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok"}
+    return {
+        "status": "ok"
+    }
 
+
+# --------------------------------------------------
+# Summarization Endpoint
+# --------------------------------------------------
 
 @app.post("/summarize/")
 def summarize(dialogue_input: DialogueInput) -> dict[str, str]:
+
     try:
         summary = summarize_text(dialogue_input.dialogue)
+
     except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
+
     except Exception as exc:
         # Do not expose model internals to the browser.
         raise HTTPException(
@@ -59,4 +94,6 @@ def summarize(dialogue_input: DialogueInput) -> dict[str, str]:
             detail="The summarization service failed while generating the summary.",
         ) from exc
 
-    return {"summary": summary}
+    return {
+        "summary": summary
+    }
