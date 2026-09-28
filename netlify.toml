@@ -1,0 +1,16 @@
+[build]
+  publish = "frontend"
+
+# Netlify serves the frontend. The Python FastAPI model API runs separately
+# (for example, as a Render Web Service) and is proxied through this path.
+[[redirects]]
+  from = "/api/summarize"
+  to = "https://YOUR-BACKEND-URL.onrender.com/summarize/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/health"
+  to = "https://YOUR-BACKEND-URL.onrender.com/health"
+  status = 200
+  force = true

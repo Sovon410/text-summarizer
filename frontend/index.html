@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered text summarizer using a fine-tuned T5 model.">
+    <title>Text Summarizer | T5</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="hero">
+            <p class="eyebrow">✦ Hugging Face Transformer</p>
+            <h1>Text Summarizer</h1>
+            <p class="intro">Paste a dialogue or long piece of text and generate a concise summary with a fine-tuned T5 model.</p>
+        </header>
+
+        <form id="summarization-form" novalidate>
+            <div class="field-header">
+                <label for="text-input">Your text</label>
+                <span id="character-count" aria-live="polite">0 / 20,000</span>
+            </div>
+
+            <textarea
+                id="text-input"
+                name="dialogue"
+                maxlength="20000"
+                placeholder="Example: Alice: Are we still meeting at 6?&#10;Bob: Yes. I'll bring the documents."
+                required
+            ></textarea>
+
+            <div class="actions">
+                <button type="button" id="clear-button" class="secondary-button">Clear</button>
+                <button type="submit" id="submit-button" class="primary-button">
+                    <span id="submit-label">Summarize</span>
+                    <span id="loading-spinner" class="spinner" hidden aria-hidden="true"></span>
+                </button>
+            </div>
+        </form>
+
+        <section class="summary-output" id="summary-output" hidden aria-live="polite" aria-busy="false">
+            <div class="summary-header">
+                <h2>Content Summary</h2>
+                <span class="status-dot" aria-hidden="true"></span>
+            </div>
+            <p id="summary-text"></p>
+        </section>
+
+        <p id="error-message" class="error-message" role="alert" hidden></p>
+    </main>
+
+    <footer class="watermark" aria-hidden="true">SOVON KAMILA</footer>
+
+    <script src="./script.js" defer></script>
+</body>
+</html>

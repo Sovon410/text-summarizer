@@ -1,0 +1,7 @@
+pandas>=2.2,<3
+torch>=2.8,<2.11
+transformers>=4.55,<5
+accelerate>=1.10,<2
+datasets>=3.6,<5
+sentencepiece>=0.2,<0.3
+evaluate>=0.4,<0.5
